@@ -72,6 +72,7 @@ import net.fabricmc.loom.util.function.LazyBool;
 
 public class LoomGradleExtension {
 	private static final String FORGE_PROPERTY = "loom.forge";
+	private static final String QUILT_PROPERTY = "loom.quilt";
 	private static final String INCLUDE_PROPERTY = "loom.forge.include";
 
 	public String refmapName;
@@ -101,6 +102,7 @@ public class LoomGradleExtension {
 	private MappingSet[] srcMappingCache = new MappingSet[2];
 	private Mercury[] srcMercuryCache = new Mercury[2];
 	private final LazyBool forge;
+	private final LazyBool quilt;
 	private final LazyBool supportsInclude;
 	private Set<File> mixinMappings = Collections.synchronizedSet(new HashSet<>());
 	private final List<String> tasksBeforeRun = Collections.synchronizedList(new ArrayList<>());
@@ -219,6 +221,7 @@ public class LoomGradleExtension {
 		this.project = project;
 		this.unmappedMods = project.files();
 		this.forge = new LazyBool(() -> Boolean.parseBoolean(Objects.toString(project.findProperty(FORGE_PROPERTY))));
+		this.quilt = new LazyBool(() -> Boolean.parseBoolean(Objects.toString(project.findProperty(QUILT_PROPERTY))));
 		this.supportsInclude = new LazyBool(() -> Boolean.parseBoolean(Objects.toString(project.findProperty(INCLUDE_PROPERTY))));
 		this.runConfigs = project.container(RunConfigSettings.class,
 				baseName -> new RunConfigSettings(project, baseName));
@@ -473,6 +476,10 @@ public class LoomGradleExtension {
 
 	public boolean isForge() {
 		return forge.getAsBoolean();
+	}
+
+	public boolean isQuilt() {
+		return quilt.getAsBoolean();
 	}
 
 	public boolean supportsInclude() {

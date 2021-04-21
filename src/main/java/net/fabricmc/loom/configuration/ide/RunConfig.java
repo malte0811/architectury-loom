@@ -135,6 +135,9 @@ public class RunConfig {
 		if ("launchwrapper".equals(extension.getLoaderLaunchMethod())) {
 			runConfig.mainClass = "net.minecraft.launchwrapper.Launch"; // TODO What about custom tweakers for run configs?
 			runConfig.programArgs += "--tweakClass " + ("client".equals(environment) ? Constants.LaunchWrapper.DEFAULT_FABRIC_CLIENT_TWEAKER : Constants.LaunchWrapper.DEFAULT_FABRIC_SERVER_TWEAKER);
+		} else if (extension.isQuilt()) {
+			runConfig.mainClass = "org.quiltmc.devlaunchinjector.Main";
+			runConfig.vmArgs = "-Dquilt.dli.config=" + encodeEscaped(extension.getDevLauncherConfig().getAbsolutePath()) + " -Dquilt.dli.env=" + environment.toLowerCase();
 		} else {
 			runConfig.mainClass = "net.fabricmc.devlaunchinjector.Main";
 			runConfig.vmArgs = "-Dfabric.dli.config=" + encodeEscaped(extension.getDevLauncherConfig().getAbsolutePath()) + " -Dfabric.dli.env=" + environment.toLowerCase();
@@ -247,7 +250,7 @@ public class RunConfig {
 			runConfig.vmArgs += " " + vmArg;
 		}
 
-		runConfig.vmArgs += " -Dfabric.dli.main=" + getMainClass(environment, extension, defaultMain);
+		runConfig.vmArgs += (extension.isQuilt() ? " -Dquilt.dli.main=" : " -Dfabric.dli.main=") + getMainClass(environment, extension, defaultMain);
 
 		// Remove unnecessary leading/trailing whitespaces we might have generated
 		runConfig.programArgs = runConfig.programArgs.trim();

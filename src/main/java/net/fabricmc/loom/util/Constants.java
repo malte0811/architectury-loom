@@ -100,6 +100,8 @@ public class Constants {
 	public static final class Dependencies {
 		public static final String MIXIN_COMPILE_EXTENSIONS = "net.fabricmc:fabric-mixin-compile-extensions:";
 		public static final String DEV_LAUNCH_INJECTOR = "net.fabricmc:dev-launch-injector:";
+		public static final String MIXIN_COMPILE_EXTENSIONS_QUILT = "org.quiltmc:sponge-mixin-compile-extensions:";
+		public static final String DEV_LAUNCH_INJECTOR_QUILT = "org.quiltmc:dev-launch-injector:";
 		public static final String TERMINAL_CONSOLE_APPENDER = "net.minecrell:terminalconsoleappender:";
 		public static final String JETBRAINS_ANNOTATIONS = "org.jetbrains:annotations:";
 		public static final String JAVAX_ANNOTATIONS = "com.google.code.findbugs:jsr305:"; // I hate that I have to add these.
@@ -113,6 +115,8 @@ public class Constants {
 		public static final class Versions {
 			public static final String MIXIN_COMPILE_EXTENSIONS = "0.4.0";
 			public static final String DEV_LAUNCH_INJECTOR = "0.2.1+build.8";
+			public static final String MIXIN_COMPILE_EXTENSIONS_QUILT = "1.0.0";
+			public static final String DEV_LAUNCH_INJECTOR_QUILT = "1.0.0";
 			public static final String TERMINAL_CONSOLE_APPENDER = "1.2.0";
 			public static final String JETBRAINS_ANNOTATIONS = "19.0.0";
 			public static final String JAVAX_ANNOTATIONS = "3.0.2";

@@ -48,6 +48,13 @@ public class MavenConfiguration {
 			repo.setUrl("https://maven.fabricmc.net/");
 		});
 
+		if (extension.isQuilt()) {
+			project.getRepositories().maven(repo -> {
+				repo.setName("Quilt");
+				repo.setUrl("https://maven.quiltmc.org/repository/release/");
+			});
+		}
+
 		project.getRepositories().maven(repo -> {
 			repo.setName("Mojang");
 			repo.setUrl("https://libraries.minecraft.net/");

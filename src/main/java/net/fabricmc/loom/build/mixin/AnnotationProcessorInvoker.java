@@ -101,8 +101,13 @@ public abstract class AnnotationProcessorInvoker<T extends Task> {
 				);
 
 				// Add Mixin and mixin extensions (fabric-mixin-compile-extensions pulls mixin itself too)
-				project.getDependencies().add(processorConfig.getName(),
-								Constants.Dependencies.MIXIN_COMPILE_EXTENSIONS + Constants.Dependencies.Versions.MIXIN_COMPILE_EXTENSIONS);
+				if (extension.isQuilt()) {
+					project.getDependencies().add(processorConfig.getName(),
+									Constants.Dependencies.MIXIN_COMPILE_EXTENSIONS_QUILT + Constants.Dependencies.Versions.MIXIN_COMPILE_EXTENSIONS_QUILT);
+				} else {
+					project.getDependencies().add(processorConfig.getName(),
+									Constants.Dependencies.MIXIN_COMPILE_EXTENSIONS + Constants.Dependencies.Versions.MIXIN_COMPILE_EXTENSIONS);
+				}
 			}
 		}
 

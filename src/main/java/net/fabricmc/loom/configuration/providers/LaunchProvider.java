@@ -58,8 +58,11 @@ public class LaunchProvider extends DependencyProvider {
 	@Override
 	public void provide(DependencyInfo dependency, Consumer<Runnable> postPopulationScheduler) throws IOException {
 		final LaunchConfig launchConfig = new LaunchConfig()
-				.property("fabric.development", "true")
-				.property("fabric.remapClasspathFile", getRemapClasspathFile().getAbsolutePath())
+				.property(!getExtension().isQuilt(), "fabric.development", "true")
+				.property(!getExtension().isQuilt(), "fabric.remapClasspathFile", getRemapClasspathFile().getAbsolutePath())
+				.property(getExtension().isQuilt(), "quilt.development", "true")
+				.property(getExtension().isQuilt(), "quilt.remapClasspathFile", getRemapClasspathFile().getAbsolutePath())
+				.property(getExtension().isQuilt(), "quilt.launcherName", "Loom")
 				.property("log4j.configurationFile", getAllLog4JConfigFiles())
 
 				.property("client", "java.library.path", getExtension().getNativesDirectory().getAbsolutePath())
@@ -131,7 +134,12 @@ public class LaunchProvider extends DependencyProvider {
 		writeLog4jConfig();
 		FileUtils.writeStringToFile(getExtension().getDevLauncherConfig(), launchConfig.asString(), StandardCharsets.UTF_8);
 
-		addDependency(Constants.Dependencies.DEV_LAUNCH_INJECTOR + Constants.Dependencies.Versions.DEV_LAUNCH_INJECTOR, Constants.Configurations.LOOM_DEVELOPMENT_DEPENDENCIES);
+		if (getExtension().isQuilt()) {
+			addDependency(Constants.Dependencies.DEV_LAUNCH_INJECTOR_QUILT + Constants.Dependencies.Versions.DEV_LAUNCH_INJECTOR_QUILT, Constants.Configurations.LOOM_DEVELOPMENT_DEPENDENCIES);
+		} else {
+			addDependency(Constants.Dependencies.DEV_LAUNCH_INJECTOR + Constants.Dependencies.Versions.DEV_LAUNCH_INJECTOR, Constants.Configurations.LOOM_DEVELOPMENT_DEPENDENCIES);
+		}
+
 		addDependency(Constants.Dependencies.TERMINAL_CONSOLE_APPENDER + Constants.Dependencies.Versions.TERMINAL_CONSOLE_APPENDER, Constants.Configurations.LOOM_DEVELOPMENT_DEPENDENCIES);
 		annotationDependency = addDependency(Constants.Dependencies.JETBRAINS_ANNOTATIONS + Constants.Dependencies.Versions.JETBRAINS_ANNOTATIONS, JavaPlugin.COMPILE_ONLY_CONFIGURATION_NAME);
 
@@ -196,6 +204,12 @@ public class LaunchProvider extends DependencyProvider {
 
 	public static class LaunchConfig {
 		private final Map<String, List<String>> values = new HashMap<>();
+
+		private LaunchConfig property(boolean predicate, String key, String value) {
+			if (!predicate) return this;
+
+			return property(key, value);
+		}
 
 		public LaunchConfig property(String key, String value) {
 			return property("common", key, value);
