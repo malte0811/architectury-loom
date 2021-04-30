@@ -80,7 +80,7 @@ public class LoomGradleExtension {
 	public boolean remapMod = true;
 	public String customManifest = null;
 	public File accessWidener = null;
-	public Function<String, Object> intermediaryUrl = mcVer -> "https://maven.fabricmc.net/net/fabricmc/intermediary/" + mcVer + "/intermediary-" + mcVer + "-v2.jar";
+	public Function<String, Object> intermediaryUrl = mcVer -> (isQuilt() ? "https://maven.quiltmc.org/repository/release/org/quiltmc/intermediary/" : "https://maven.fabricmc.net/net/fabricmc/intermediary/") + mcVer + "/intermediary-" + mcVer + "-v2.jar";
 	public boolean shareCaches = false;
 	public List<String> mixinConfigs = new ArrayList<>(); // FORGE: Passed to Minecraft
 	public boolean useFabricMixin = true; // FORGE: Use Fabric Mixin for better refmap resolutions
