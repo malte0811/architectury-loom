@@ -113,7 +113,7 @@ public class Constants {
 		 * Constants for versions of dependencies.
 		 */
 		public static final class Versions {
-			public static final String MIXIN_COMPILE_EXTENSIONS = "0.4.0";
+			public static final String MIXIN_COMPILE_EXTENSIONS = "0.4.3";
 			public static final String DEV_LAUNCH_INJECTOR = "0.2.1+build.8";
 			public static final String MIXIN_COMPILE_EXTENSIONS_QUILT = "1.0.0";
 			public static final String DEV_LAUNCH_INJECTOR_QUILT = "1.0.0";
