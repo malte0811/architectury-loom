@@ -271,7 +271,11 @@ public class ModProcessor {
 				ZipEntry entry = null;
 
 				if (!launchMethod.isEmpty()) {
-					entry = jarFile.getEntry("fabric-installer." + launchMethod + ".json");
+					if (extension.isQuilt()) {
+						entry = jarFile.getEntry("quilt-installer." + launchMethod + ".json");
+					}
+
+					entry = entry != null ? entry : jarFile.getEntry("fabric-installer." + launchMethod + ".json");
 
 					if (entry == null) {
 						project.getLogger().warn("Could not find loader launch method '" + launchMethod + "', falling back");
@@ -279,7 +283,11 @@ public class ModProcessor {
 				}
 
 				if (entry == null) {
-					entry = jarFile.getEntry("fabric-installer.json");
+					if (extension.isQuilt()) {
+						entry = jarFile.getEntry("quilt-installer.json");
+					}
+
+					entry = entry != null ? entry : jarFile.getEntry("fabric-installer.json");
 
 					if (entry == null) {
 						return null;

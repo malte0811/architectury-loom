@@ -162,7 +162,11 @@ public class LoomDependencyManager {
 		}
 
 		if (extension.getInstallerJson() == null && !extension.isForge()) {
-			project.getLogger().warn("fabric-installer.json not found in classpath!");
+			if (extension.isQuilt()) {
+				project.getLogger().warn("quilt-installer.json or fabric-installer.json not found in classpath!");
+			} else {
+				project.getLogger().warn("fabric-installer.json not found in classpath!");
+			}
 		}
 
 		ModCompileRemapper.remapDependencies(project, mappingsKey, extension, sourceRemapper);
