@@ -204,18 +204,16 @@ public class FieldMigratedMappingsProvider extends MappingsProvider {
 
 		Visitor visitor = new Visitor(Opcodes.ASM9);
 
-		for (MinecraftPatchedProvider.Environment environment : MinecraftPatchedProvider.Environment.values()) {
-			File patchedSrgJar = environment.patchedSrgJar.apply(extension.getMappingsProvider().patchedProvider);
-			FileSystemUtil.FileSystemDelegate system = FileSystemUtil.getJarFileSystem(patchedSrgJar, false);
-			completer.onComplete(value -> system.close());
+		File patchedSrgJar = extension.getMappingsProvider().patchedProvider.getMergedSrgJar();
+		FileSystemUtil.FileSystemDelegate system = FileSystemUtil.getJarFileSystem(patchedSrgJar, false);
+		completer.onComplete(value -> system.close());
 
-			for (Path fsPath : (Iterable<? extends Path>) Files.walk(system.get().getPath("/"))::iterator) {
-				if (Files.isRegularFile(fsPath) && fsPath.toString().endsWith(".class")) {
-					completer.add(() -> {
-						byte[] bytes = Files.readAllBytes(fsPath);
-						new ClassReader(bytes).accept(visitor, ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
-					});
-				}
+		for (Path fsPath : (Iterable<? extends Path>) Files.walk(system.get().getPath("/"))::iterator) {
+			if (Files.isRegularFile(fsPath) && fsPath.toString().endsWith(".class")) {
+				completer.add(() -> {
+					byte[] bytes = Files.readAllBytes(fsPath);
+					new ClassReader(bytes).accept(visitor, ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
+				});
 			}
 		}
 

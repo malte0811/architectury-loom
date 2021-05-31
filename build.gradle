@@ -108,6 +108,9 @@ dependencies {
 	implementation ('org.cadixdev:lorenz-asm:0.5.3')
 	implementation ('de.oceanlabs.mcp:mcinjector:3.8.0')
 	implementation ('com.opencsv:opencsv:5.4')
+	implementation ('net.minecraftforge:mergetool:1.1.1:fatjar') {
+		transitive = false
+	}
 
 	// Forge injection
 	forgeInjectShadow ('net.fabricmc:tiny-mappings-parser:0.2.2.14')

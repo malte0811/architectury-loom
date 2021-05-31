@@ -41,8 +41,7 @@ import net.fabricmc.loom.configuration.DependencyProvider;
 import net.fabricmc.loom.util.Constants;
 
 public class PatchProvider extends DependencyProvider {
-	public Path clientPatches;
-	public Path serverPatches;
+	public Path joinedPatches;
 	public String forgeVersion;
 	public Path projectCacheFolder;
 
@@ -54,14 +53,13 @@ public class PatchProvider extends DependencyProvider {
 	public void provide(DependencyInfo dependency, Consumer<Runnable> postPopulationScheduler) throws Exception {
 		init(dependency.getDependency().getVersion());
 
-		if (Files.notExists(clientPatches) || Files.notExists(serverPatches) || isRefreshDeps()) {
+		if (Files.notExists(joinedPatches) || isRefreshDeps()) {
 			getProject().getLogger().info(":extracting forge patches");
 
-			Path installerJar = dependency.resolveFile().orElseThrow(() -> new RuntimeException("Could not resolve Forge installer")).toPath();
+			Path installerJar = dependency.resolveFile().orElseThrow(() -> new RuntimeException("Could not resolve Forge userdev")).toPath();
 
 			try (FileSystem fs = FileSystems.newFileSystem(new URI("jar:" + installerJar.toUri()), ImmutableMap.of("create", false))) {
-				Files.copy(fs.getPath("data", "client.lzma"), clientPatches, StandardCopyOption.REPLACE_EXISTING);
-				Files.copy(fs.getPath("data", "server.lzma"), serverPatches, StandardCopyOption.REPLACE_EXISTING);
+				Files.copy(fs.getPath("joined.lzma"), joinedPatches, StandardCopyOption.REPLACE_EXISTING);
 			}
 		}
 	}
@@ -69,8 +67,7 @@ public class PatchProvider extends DependencyProvider {
 	private void init(String forgeVersion) {
 		this.forgeVersion = forgeVersion;
 		projectCacheFolder = getExtension().getProjectPersistentCache().toPath().resolve(forgeVersion);
-		clientPatches = projectCacheFolder.resolve("patches-client.lzma");
-		serverPatches = projectCacheFolder.resolve("patches-server.lzma");
+		joinedPatches = projectCacheFolder.resolve("joined.lzma");
 
 		try {
 			Files.createDirectories(projectCacheFolder);
@@ -85,6 +82,6 @@ public class PatchProvider extends DependencyProvider {
 
 	@Override
 	public String getTargetConfig() {
-		return Constants.Configurations.FORGE_INSTALLER;
+		return Constants.Configurations.FORGE_USERDEV;
 	}
 }
