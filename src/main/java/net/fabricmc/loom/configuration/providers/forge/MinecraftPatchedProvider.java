@@ -323,7 +323,7 @@ public class MinecraftPatchedProvider extends DependencyProvider {
 		File injection = File.createTempFile("loom-injection", ".jar");
 
 		try (InputStream in = MinecraftProvider.class.getResourceAsStream("/inject/injection.jar")) {
-			FileUtils.copyInputStreamToFile(in, injection);
+			Files.copy(in, injection.toPath());
 		}
 
 		walkFileSystems(injection, minecraftMergedPatchedSrgJar, it -> {
@@ -342,16 +342,15 @@ public class MinecraftPatchedProvider extends DependencyProvider {
 		logger.lifecycle(":access transforming minecraft");
 
 		File input = minecraftMergedPatchedSrgJar;
-		File inputCopied = File.createTempFile("at_temp", ".jar");
-		FileUtils.copyFile(input, inputCopied);
 		File target = minecraftMergedPatchedSrgAtJar;
 		Files.deleteIfExists(target.toPath());
-		File at = File.createTempFile("at_temp", ".cfg");
-		JarUtil.extractFile(inputCopied, "META-INF/accesstransformer.cfg", at);
+		File at = File.createTempFile("at-conf", ".cfg");
+		at.deleteOnExit();
+		JarUtil.extractFile(input, "META-INF/accesstransformer.cfg", at);
 
 		List<String> args = new ArrayList<>();
 		args.add("--inJar");
-		args.add(inputCopied.getAbsolutePath());
+		args.add(input.getAbsolutePath());
 		args.add("--outJar");
 		args.add(target.getAbsolutePath());
 		args.add("--atFile");
@@ -372,7 +371,6 @@ public class MinecraftPatchedProvider extends DependencyProvider {
 				spec.setStandardOutput(System.out);
 			}
 		}).rethrowFailure().assertNormalExitValue();
-		inputCopied.delete();
 	}
 
 	private void remapPatchedJars(Logger logger) throws Exception {

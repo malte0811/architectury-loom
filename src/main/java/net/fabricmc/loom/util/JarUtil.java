@@ -26,13 +26,8 @@ package net.fabricmc.loom.util;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
-import com.google.common.collect.ImmutableMap;
 
 /**
  * Working with jars.
@@ -41,10 +36,10 @@ import com.google.common.collect.ImmutableMap;
  */
 public final class JarUtil {
 	public static void extractFile(File jar, String filePath, File target) throws IOException {
-		try (FileSystem fs = FileSystems.newFileSystem(URI.create("jar:" + jar.toURI()), ImmutableMap.of("create", false))) {
+		try (FileSystemUtil.FileSystemDelegate fs = FileSystemUtil.getJarFileSystem(jar, false)) {
 			Path targetPath = target.toPath();
 			Files.deleteIfExists(targetPath);
-			Files.copy(fs.getPath(filePath), targetPath);
+			Files.copy(fs.get().getPath(filePath), targetPath);
 		}
 	}
 }

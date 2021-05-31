@@ -80,6 +80,8 @@ public final class FileSystemUtil {
 			return new FileSystemDelegate(FileSystems.newFileSystem(jarUri, create ? jfsArgsCreate : jfsArgsEmpty), true);
 		} catch (FileSystemAlreadyExistsException e) {
 			return new FileSystemDelegate(FileSystems.getFileSystem(jarUri), false);
+		} catch (IOException e) {
+			throw new IOException("Could not create JAR file system for " + uri + " (create: " + create + ")", e);
 		}
 	}
 }
