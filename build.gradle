@@ -130,6 +130,10 @@ dependencies {
 	compileOnly 'org.jetbrains:annotations:20.1.0'
 }
 
+tasks.named('compileForgeInjectJava') {
+	it.options.release = 8
+}
+
 task forgeInjectJar(type:  ShadowJar, dependsOn: [compileForgeInjectJava, processForgeInjectResources]) {
 	relocate 'net.fabricmc.mapping', 'net.fabricmc.loom.mapping'
 	relocate 'net.fabricmc.mappings', 'net.fabricmc.loom.mappings'
